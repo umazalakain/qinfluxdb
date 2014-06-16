@@ -68,6 +68,7 @@ class Query(object):
     def where(self, condition):
         if condition:
             return self._clone(where=condition)
+        return self._clone()
 
     def group_by(self, *fields):
         return self._clone(group_by=fields)
