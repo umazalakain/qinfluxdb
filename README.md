@@ -4,6 +4,14 @@ QInfluxDB
 A little ORM for [InfluxDB](https://github.com/influxdb/influxdb) based on the
 [python wrapper for InfluxDB](https://github.com/influxdb/influxdb-python).
 
+Installation
+------------
+
+```
+pip install git+https://github.com/unaizalakain/qinfluxdb.git
+```
+
+
 Example use case
 ----------------
 

@@ -4,7 +4,7 @@ setup_args = {
     'packages': ['qinfluxdb'],
     'url': 'https://github.com/unaizalakain/qinfluxdb',
     'description': 'A little ORM for issuing queries to InfluxDB',
-    'long_description': open('README.rst').read(),
+    'long_description': open('README.md').read(),
     'author': 'Unai Zalakain',
     'author_email': 'unai@gisa-elkartea.org',
     'maintainer': 'Unai Zalakain',
