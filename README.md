@@ -21,7 +21,7 @@ from qinfluxdb import Client
 # The client is just a wrapper around InfluxDB's python client
 client = Client(database='analytics', timeout=60)
 
-query = client.q.select('time', 'mean(temp)').from_series('temperature').group_by('time(1d)')
+query = client.q.from_series('temperature')
 
 # Iterate over the results
 for result in query:
@@ -32,6 +32,9 @@ query.all()
 
 # Continue with the query and filter
 query.where('value > 20').limit(20)
+
+# Only select some of the values
+query.values('time', 'mean(value)').group_by('time(1d)')
 
 # Advanced filters
 from qinfluxdb import Q

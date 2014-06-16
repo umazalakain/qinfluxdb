@@ -19,6 +19,7 @@ class Query(object):
 
     def __init__(self, query=None, client=None):
         self.query = {} if query is None else query
+        self.query.setdefault('values', '*')
         self.client = client
 
     def _clone(self, **kwargs):
@@ -58,11 +59,8 @@ class Query(object):
     def __str__(self):
         return self._build()
 
-    def select(self, *fields):
-        copy = self._clone()
-        copy.query.setdefault('values', [])
-        copy.query['values'].extend(fields)
-        return copy
+    def values(self, *fields):
+        return self._clone(values=fields)
 
     def from_series(self, series):
         return self._clone(series=series)
