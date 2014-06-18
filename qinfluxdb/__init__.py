@@ -21,6 +21,7 @@ class Query(object):
         self.query = {} if query is None else query
         self.query.setdefault('values', '*')
         self.client = client
+        self.columns = None
 
     def _clone(self, **kwargs):
         copy = self.__class__(self.query.copy(), self.client)
@@ -79,24 +80,29 @@ class Query(object):
     def into(self, field):
         return self._clone(into=field)
 
-    def execute(self):
+    def _execute(self):
         response = self.client.query(str(self))
         if not response:
             raise StopIteration()
         response = response[0]
         columns = response['columns']
+        yield columns
         for row in response['points']:
             obj = dict(zip(columns, row))
             yield obj
 
     def __iter__(self):
-        return self.execute()
+        response = self._execute()
+        self.columns = next(response, [])
+        return response
 
     def all(self):
-        return list(self.execute())
+        return list(iter(self))
 
     def first(self):
         return next(iter(self), None)
+
+
 
 
 class Q(object):
