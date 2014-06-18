@@ -95,6 +95,9 @@ class Query(object):
     def all(self):
         return list(self.execute())
 
+    def first(self):
+        return next(iter(self), None)
+
 
 class Q(object):
     AND = 'and'
