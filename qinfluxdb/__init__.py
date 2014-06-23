@@ -8,8 +8,10 @@ class Client(InfluxDBClient):
 
 
 class Query(object):
-    _clause_mappings = {
-            'values': ', '.join,
+    @property
+    def _clause_mappings(self):
+        return {
+            'values': self._build_values,
             'series': str,
             'where': str,
             'group_by': ', '.join,
@@ -19,7 +21,7 @@ class Query(object):
 
     def __init__(self, query=None, client=None):
         self.query = {} if query is None else query
-        self.query.setdefault('values', '*')
+        self.query.setdefault('values', ['*'])
         self.client = client
         self.columns = None
 
@@ -27,6 +29,14 @@ class Query(object):
         copy = self.__class__(self.query.copy(), self.client)
         copy.query.update(kwargs)
         return copy
+
+    def _build_values(self, values):
+        processed = []
+        for name, value in values.items():
+            if name != value:
+                value = '{1} as {0}'.format(name, value)
+            processed.append(value)
+        return ', '.join(processed)
 
     def _build_clauses(self, query):
         clauses = {}
@@ -60,8 +70,9 @@ class Query(object):
     def __str__(self):
         return self._build()
 
-    def values(self, *fields):
-        return self._clone(values=fields)
+    def values(self, *fields, **renames):
+        renames.update({field: field for field in fields})
+        return self._clone(values=renames)
 
     def from_series(self, series):
         return self._clone(series=series)
